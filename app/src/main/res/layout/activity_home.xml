@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    tools:context="com.gaojun.mobilesafe.HomeActivity"
+    >
+
+
+    <TextView
+        android:textColor="@android:color/black"
+        android:textSize="22sp"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="功能列表"
+        android:layout_margin="10dp"
+        android:id="@+id/tv_title_home"
+        />
+    <com.gaojun.mobilesafe.ui.FocusTextView
+        android:ellipsize="marquee"
+        android:singleLine="true"
+        android:text="大大聲大聲公佈和空格分開收費會撒嬌好的，大聲大聲的接口撒個紅包"
+        android:layout_below="@+id/tv_title_home"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <GridView
+        android:id="@+id/list_home"
+        android:numColumns="3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        ></GridView>
+</RelativeLayout>
