@@ -1,0 +1,46 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.gaojun.mobilesafe.fragments.Setup1Fragment">
+
+    <TextView
+        android:text="1.欢迎使用手机防盗"
+        style="@style/text_title_style"
+        />
+
+    <TextView
+        android:text="您的手机防盗卫士："
+        style="@style/text_content_style"
+        />
+    <TextView
+        android:text="sim卡变更报警"
+        style="@style/text_content_style"
+        android:drawableLeft="@android:drawable/star_big_on"
+        />
+    <TextView
+        android:text="GPS追踪"
+        style="@style/text_content_style"
+        android:drawableLeft="@android:drawable/star_big_on"
+        />
+    <TextView
+        android:text="远程数据销毁"
+        style="@style/text_content_style"
+        android:drawableLeft="@android:drawable/star_big_on"
+        />
+    <TextView
+        android:text="远程锁屏"
+        style="@style/text_content_style"
+        android:drawableLeft="@android:drawable/star_big_on"
+        />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageView
+            android:src="@mipmap/setup1"
+            android:layout_centerInParent="true"
+            android:layout_width="100dp"
+            android:layout_height="100dp" />
+    </RelativeLayout>
+</LinearLayout>

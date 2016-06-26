@@ -1,0 +1,41 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:gaojun="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        style="@style/text_title_style"
+        android:text="2.手机卡绑定"
+        />
+
+    <TextView
+        style="@style/text_content_style"
+        android:text="通过绑定sim:" />
+
+    <TextView
+        style="@style/text_content_style"
+        android:text="下次重启手机如果发现sim变化\n就会发送报警短信" />
+
+
+    <com.gaojun.mobilesafe.ui.SettingItemView
+        gaojun:mtitle="点击绑定sim卡"
+        gaojun:desc_on="sim卡已绑定"
+        gaojun:desc_off="sim卡没有绑定"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+    </com.gaojun.mobilesafe.ui.SettingItemView>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerInParent="true"
+            android:src="@mipmap/bind" />
+
+    </RelativeLayout>
+
+</LinearLayout>

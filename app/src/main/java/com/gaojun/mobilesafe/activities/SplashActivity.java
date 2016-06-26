@@ -1,16 +1,20 @@
-package com.gaojun.mobilesafe;
+package com.gaojun.mobilesafe.activities;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -18,6 +22,7 @@ import android.view.animation.AlphaAnimation;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.gaojun.mobilesafe.R;
 import com.gaojun.mobilesafe.utils.StreamTools;
 
 import net.tsz.afinal.FinalHttp;
@@ -45,48 +50,87 @@ public class SplashActivity extends Activity {
     private TextView tv_update_info;
     private String description;
     private String apkurl;
+    private SharedPreferences sp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        tv_splash_version = (TextView) findViewById(R.id.tv_splash_version);
-        tv_splash_version.setText("版本号:"+ getVersionName());
-        tv_update_info = (TextView) findViewById(R.id.tv_update_info);
-
         //检查升级
-        checkUpdate();
-        AlphaAnimation aa = new AlphaAnimation(0.2f,1.0f);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            int permissionCheck = ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            if (permissionCheck != PackageManager.PERMISSION_GRANTED){
+                //申请权限
+                ActivityCompat.requestPermissions(this,new String[]{
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE},RESULT_CANCELED);
+            }
+        }
+        sp = getSharedPreferences("config", MODE_PRIVATE);
+        tv_splash_version = (TextView) findViewById(R.id.tv_splash_version);
+        tv_splash_version.setText("版本号:" + getVersionName());
+        tv_update_info = (TextView) findViewById(R.id.tv_update_info);
+        boolean update = sp.getBoolean("update", true);
+        if (update) {
+
+            checkUpdate();
+        } else {
+            //不检查更新
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    //进入主页面
+                    enterHome();
+                }
+            }, 2000);
+        }
+        AlphaAnimation aa = new AlphaAnimation(0.2f, 1.0f);
         aa.setDuration(500);
         findViewById(R.id.rl_root_splash).startAnimation(aa);
+
+
     }
 
-    private Handler mHandler = new Handler(){
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            // Permission Granted
+            Toast.makeText(this,"授权成功",Toast.LENGTH_LONG).show();
+        } else {
+            // Permission Denied
+            Toast.makeText(this,"授权失败",Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what){
+            switch (msg.what) {
                 case SHOW_UPDATE_DIALOG:
                     showUpdateDialog();
-                    Log.i(TAG,"显示升级的对话框");
+                    Log.i(TAG, "显示升级的对话框");
                     break;
                 case ENTER_HOME:
                     enterHome();
                     break;
                 case NETWORK_ERROR:
-                    Toast.makeText(getApplicationContext(),"网络错误",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "网络错误", Toast.LENGTH_LONG).show();
+                    enterHome();
                     break;
                 case JSON_ERROR:
-                    Toast.makeText(getApplicationContext(),"JSON错误",Toast.LENGTH_LONG).show();
-
+                    Toast.makeText(getApplicationContext(), "JSON错误", Toast.LENGTH_LONG).show();
+                    enterHome();
                     break;
                 case URL_ERROR:
-                    Toast.makeText(getApplicationContext(),"url错误",Toast.LENGTH_LONG).show();
-
+                    Toast.makeText(getApplicationContext(), "url错误", Toast.LENGTH_LONG).show();
+                    enterHome();
                     break;
             }
         }
     };
+
     /**
      * 弹出升级对话框
      */
@@ -118,7 +162,7 @@ public class SplashActivity extends Activity {
                     // afnal
                     FinalHttp finalhttp = new FinalHttp();
                     finalhttp.download(apkurl, Environment
-                                    .getExternalStorageDirectory().getAbsolutePath()+"/mobilesafe2.0.apk",
+                                    .getExternalStorageDirectory().getAbsolutePath() + "/mobilesafe2.0.apk",
                             new AjaxCallBack<File>() {
 
                                 @Override
@@ -134,9 +178,10 @@ public class SplashActivity extends Activity {
                                     // TODO Auto-generated method stub
                                     super.onLoading(count, current);
                                     tv_update_info.setVisibility(View.VISIBLE);
+                                    tv_update_info.setVisibility(View.VISIBLE);
                                     //当前下载百分比
                                     int progress = (int) (current * 100 / count);
-                                    tv_update_info.setText("下载进度："+progress+"%");
+                                    tv_update_info.setText("下载进度：" + progress + "%");
                                 }
 
                                 @Override
@@ -145,6 +190,7 @@ public class SplashActivity extends Activity {
                                     super.onSuccess(t);
                                     installAPK(t);
                                 }
+
                                 /**
                                  * 安装APK
                                  * @param t
@@ -162,7 +208,7 @@ public class SplashActivity extends Activity {
 
                             });
                 } else {
-                    Toast.makeText(getApplicationContext(), "没有sdcard，请安装上在试",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "没有sdcard，请安装上在试", Toast.LENGTH_LONG).show();
                     return;
                 }
 
@@ -180,11 +226,12 @@ public class SplashActivity extends Activity {
         builder.show();
 
     }
+
     /**
      * 进入Home页面
      */
     private void enterHome() {
-        Intent intent = new Intent(this,HomeActivity.class);
+        Intent intent = new Intent(this, HomeActivity.class);
         startActivity(intent);
         finish();
     }
@@ -193,7 +240,7 @@ public class SplashActivity extends Activity {
      * 检查更新
      */
     private void checkUpdate() {
-        new Thread(){
+        new Thread() {
 
             @Override
             public void run() {
@@ -206,12 +253,12 @@ public class SplashActivity extends Activity {
                     conn.setRequestMethod("GET");
                     conn.setConnectTimeout(5000);
                     int code = conn.getResponseCode();
-                    if (code == 200){
+                    if (code == 200) {
                         //联网成功
                         InputStream is = conn.getInputStream();
                         //把流转成String
                         String result = StreamTools.readFromStream(is);
-                        Log.d(TAG,result);
+                        Log.d(TAG, result);
 
                         JSONObject obj = new JSONObject(result);
                         String version = (String) obj.get("version");
@@ -219,10 +266,10 @@ public class SplashActivity extends Activity {
                         apkurl = (String) obj.get("apkurl");
 
                         //校验是否有新版本
-                        if (getVersionName().equals(version)){
+                        if (getVersionName().equals(version)) {
                             //版本一致,进入主界面
                             msg.what = ENTER_HOME;
-                        }else {
+                        } else {
                             //弹出升级对话框
                             msg.what = SHOW_UPDATE_DIALOG;
                         }
@@ -236,12 +283,12 @@ public class SplashActivity extends Activity {
                 } catch (JSONException e) {
                     msg.what = JSON_ERROR;
                     e.printStackTrace();
-                }finally {
+                } finally {
                     long endTime = System.currentTimeMillis();
                     long useTime = endTime - startTime;
-                    if (useTime < 2000){
+                    if (useTime < 2000) {
                         try {
-                            Thread.sleep(2000-useTime);
+                            Thread.sleep(2000 - useTime);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
@@ -257,11 +304,11 @@ public class SplashActivity extends Activity {
     /**
      * 得到版本名称
      */
-    private String getVersionName(){
+    private String getVersionName() {
         //用来管理手机的APK
         PackageManager pm = getPackageManager();
         try {
-            PackageInfo info = pm.getPackageInfo(getPackageName(),0);
+            PackageInfo info = pm.getPackageInfo(getPackageName(), 0);
             return info.versionName;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();

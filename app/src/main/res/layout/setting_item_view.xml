@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/ll_title_item"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            >
+            <TextView
+                android:textColor="@android:color/black"
+                android:textSize="20sp"
+                android:id="@+id/tv_title_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="设置是否检查更新"
+                />
+            <TextView
+                android:id="@+id/tv_desc_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+        </LinearLayout>
+
+        <CheckBox
+            android:clickable="false"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:id="@+id/cb_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    <View
+        android:layout_margin="5dp"
+        android:background="@android:color/black"
+        android:layout_below="@id/ll_title_item"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+
+</RelativeLayout>

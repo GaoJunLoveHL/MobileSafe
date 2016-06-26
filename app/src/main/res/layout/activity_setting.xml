@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:setting="http://schemas.android.com/apk/res-auto"
+    tools:context=".activities.SettingActivity">
+    <TextView
+        android:textColor="@android:color/black"
+        android:textSize="22sp"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="设置中心"
+        android:layout_margin="10dp"
+        android:id="@+id/tv_title_setting"
+        />
+    <com.gaojun.mobilesafe.ui.SettingItemView
+        setting:mtitle="设置是否检查更新"
+        setting:desc_on="检查更新"
+        setting:desc_off="不检查更新"
+        android:id="@+id/siv_update"
+        android:layout_below="@+id/tv_title_setting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+    </com.gaojun.mobilesafe.ui.SettingItemView>
+</RelativeLayout>
